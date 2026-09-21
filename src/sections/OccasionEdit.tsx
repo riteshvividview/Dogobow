@@ -49,7 +49,12 @@ export default function OccasionEdit() {
         rot(gsap.utils.clamp(-8, 8, (e.clientX - lastX) * 0.4))
         lastX = e.clientX
       }
-      const enter = () => gsap.set(el, { scale: 1, autoAlpha: 1 })
+      // Start just to the right of the cursor and glide in, instead of travelling from wherever it was last.
+      const enter = (e: MouseEvent) => {
+        gsap.set(el, { x: e.clientX + 70 + 220, y: e.clientY, rotation: 0, scale: 1, autoAlpha: 1 })
+        x(e.clientX + 70)
+        y(e.clientY)
+      }
       const leave = () => gsap.set(el, { autoAlpha: 0 })
 
       const ul = list.current
