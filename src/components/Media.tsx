@@ -1,4 +1,4 @@
-import type { ImgHTMLAttributes } from 'react'
+import { useEffect, useRef, useState, type ImgHTMLAttributes } from 'react'
 
 /**
  * Drop-in imagery. Put a file named after a slot anywhere under src/assets/images/ (one folder per section)
@@ -71,42 +71,85 @@ export const SLOTS = [
 
 export type SlotName = (typeof SLOTS)[number]
 
-const files = import.meta.glob('/src/assets/images/**/*.{png,jpg,jpeg,webp,avif,svg,mp4,webm}', {
+// Photos are re-encoded to WebP at build time (originals stay untouched in the folders).
+// Backgrounds keep more width; everything else is capped at 1000px, which covers 2x cards.
+const bgFiles = import.meta.glob(
+  ['/src/assets/images/**/*background*.{png,jpg,jpeg}', '/src/assets/images/**/*-bg*.{png,jpg,jpeg}'],
+  {
+    eager: true,
+    query: { format: 'webp', w: 1920, quality: 76 },
+    import: 'default',
+  },
+) as Record<string, string>
+const photoFiles = import.meta.glob(
+  [
+    '/src/assets/images/**/*.{png,jpg,jpeg}',
+    '!/src/assets/images/**/*background*.{png,jpg,jpeg}',
+    '!/src/assets/images/**/*-bg*.{png,jpg,jpeg}',
+  ],
+  {
+    eager: true,
+    query: { format: 'webp', w: 1000, quality: 76 },
+    import: 'default',
+  },
+) as Record<string, string>
+const rawFiles = import.meta.glob("/src/assets/images/**/*.{webp,avif,svg,mp4,webm}", {
   eager: true,
-  query: '?url',
-  import: 'default',
+  query: "?url",
+  import: "default",
 }) as Record<string, string>
 
 const bySlot: Record<string, string> = {}
-for (const [path, url] of Object.entries(files)) {
-  const name = path.split('/').pop()!.replace(/\.[^.]+$/, '')
-  bySlot[name] = url
+for (const files of [rawFiles, photoFiles, bgFiles]) {
+  for (const [path, url] of Object.entries(files)) {
+    const name = path.split("/").pop()!.replace(/.[^.]+$/, "")
+    bySlot[name] = url
+  }
 }
 
 export function hasMedia(slot: SlotName) {
   return slot in bySlot
 }
 
-interface MediaProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> {
-  slot: SlotName
-}
-
-export default function Media({ slot, alt = '', className = '', ...rest }: MediaProps) {
-  const src = bySlot[slot]
-  if (!src) return null
-  return (
-    <img
-      src={src}
-      alt={alt}
-      draggable={false}
-      data-slot={slot}
-      className={className}
-      {...rest}
-    />
-  )
+/** Every image URL (no video), used to warm the cache after the page is open. */
+export function allImageUrls(): string[] {
+  return Object.values(bySlot).filter((u) => !/\.(mp4|webm)$/i.test(u))
 }
 
 /** URL of any file under src/assets/images/ (images or video) by its base file name. */
 export function mediaUrl(name: string): string | undefined {
   return bySlot[name]
+}
+
+interface MediaProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, "src"> {
+  slot: SlotName
+  /** Load immediately (above the fold). Everything else is lazy-loaded. */
+  eager?: boolean
+}
+
+export default function Media({ slot, alt = "", className = "", eager = false, style, ...rest }: MediaProps) {
+  const src = bySlot[slot]
+  const ref = useRef<HTMLImageElement>(null)
+  const [loaded, setLoaded] = useState(false)
+
+  useEffect(() => {
+    if (ref.current?.complete && ref.current.naturalWidth) setLoaded(true)
+  }, [src])
+
+  if (!src) return null
+  return (
+    <img
+      ref={ref}
+      src={src}
+      alt={alt}
+      draggable={false}
+      loading={eager ? "eager" : "lazy"}
+      decoding="async"
+      data-slot={slot}
+      onLoad={() => setLoaded(true)}
+      className={`${className} ${loaded ? "media-in" : ""}`}
+      style={loaded ? style : { ...style, opacity: 0 }}
+      {...rest}
+    />
+  )
 }

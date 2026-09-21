@@ -163,7 +163,7 @@ export default function OccasionEdit() {
                         />
                       ) : null}
                       <div data-occ-img className="h-full w-full">
-                        <Media slot={o.slot} className="h-full w-full object-cover" />
+                        <Media eager slot={o.slot} className="h-full w-full object-cover" />
                       </div>
                     </div>
                   </div>

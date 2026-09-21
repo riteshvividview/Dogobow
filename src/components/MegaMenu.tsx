@@ -146,7 +146,7 @@ function ListMenu({ kind }: { kind: 'shop' | 'collections' }) {
             >
               <motion.div style={{ x: mx, y: my }} className="absolute -inset-5">
                 {hasMedia(current.slot) ? (
-                  <Media slot={current.slot} className="h-full w-full object-cover" />
+                  <Media eager slot={current.slot} className="h-full w-full object-cover" />
                 ) : current.icon ? (
                   <current.icon size={110} strokeWidth={0.8} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-gold/30" />
                 ) : (
@@ -239,6 +239,7 @@ function CollectionsGallery() {
               >
                 {hasMedia(o.slot) ? (
                   <Media
+                    eager
                     slot={o.slot}
                     className={`h-full w-full object-cover transition-transform duration-1000 ease-[cubic-bezier(.22,1,.36,1)] ${on ? "scale-110" : "scale-100"}`}
                   />
