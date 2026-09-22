@@ -60,48 +60,43 @@ export default function Hero() {
   const content = useRef<HTMLDivElement>(null)
 
   useGSAP(
-    (_ctx, contextSafe) => {
-      onReady(
-        contextSafe!(() => {
+    () => {
+      // Built once, synchronously, inside the live GSAP context so React 18
+      // StrictMode's mount→cleanup→mount dance in dev reverts a stale build
+      // cleanly instead of leaving hero-card etc. stuck at their hidden
+      // "from" state. Only playback is deferred to the loader finishing.
+      const intro = gsap.timeline({ paused: true })
+
       SplitText.create('[data-hero-title]', {
         type: 'lines',
         mask: 'lines',
         autoSplit: true,
         onSplit: (self) =>
-          gsap.from(self.lines, {
-            yPercent: 115,
-            duration: 1.5,
-            stagger: 0.15,
-            ease: 'power4.out',
-            delay: 0.3,
-          }),
+          intro.from(
+            self.lines,
+            { yPercent: 115, duration: 1.5, stagger: 0.15, ease: 'power4.out' },
+            0.3,
+          ),
       })
 
-      gsap.from('[data-hero-fade]', {
-        autoAlpha: 0,
-        y: 28,
-        duration: 1.1,
-        stagger: 0.12,
-        ease: 'power3.out',
-        delay: 0.95,
-      })
-      gsap.from('[data-hero-card]', {
-        autoAlpha: 0,
-        y: 90,
-        duration: 1.3,
-        stagger: 0.09,
-        ease: 'power4.out',
-        delay: 1.15,
-      })
-      gsap.from('[data-hero-ring]', {
-        scale: 0.7,
-        autoAlpha: 0,
-        duration: 2.2,
-        ease: 'expo.out',
-        delay: 0.3,
-      })
-        }),
+      intro.from(
+        '[data-hero-fade]',
+        { autoAlpha: 0, y: 28, duration: 1.1, stagger: 0.12, ease: 'power3.out' },
+        0.95,
       )
+      intro.from(
+        '[data-hero-card]',
+        { autoAlpha: 0, y: 90, duration: 1.3, stagger: 0.09, ease: 'power4.out' },
+        1.15,
+      )
+      intro.from(
+        '[data-hero-ring]',
+        { scale: 0.7, autoAlpha: 0, duration: 2.2, ease: 'expo.out' },
+        0.3,
+      )
+
+      onReady(() => intro.play())
+
       gsap.to('[data-hero-rays]', {
         rotation: 7,
         opacity: 0.6,
