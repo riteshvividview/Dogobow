@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useSiteAnimations } from '../hooks/useSiteAnimations'
 import { ScrollTrigger } from '../lib/gsap'
 import Media, { hasMedia } from '../components/Media'
+import Wave from '../components/Wave'
 import NewsletterFooter from '../sections/NewsletterFooter'
 import {
   ArrowLeft,
@@ -454,7 +455,8 @@ export default function Product() {
       </section>
 
       {otherCollection ? (
-        <section className="bg-ink pb-24 pt-20 text-cream">
+        <section className="relative bg-ink pb-24 pt-20 text-cream">
+          <Wave className="text-ink" />
           <div className="mx-auto max-w-7xl px-6 sm:px-10 lg:px-16">
             <div data-reveal className="mb-10 flex flex-wrap items-end justify-between gap-4 border-b border-cream/10 pb-7">
               <div>
