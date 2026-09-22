@@ -48,7 +48,6 @@ export default function Product() {
   const [tab, setTab] = useState<'overview' | 'care' | 'reviews'>('overview')
 
   useEffect(() => {
-    window.scrollTo(0, 0)
     setActive(0)
     setSize(product?.sizes[0] ?? '')
     setQty(1)
@@ -104,16 +103,16 @@ export default function Product() {
             <span className="text-cream">{product.name}</span>
           </nav>
 
-          <div className="grid gap-10 lg:grid-cols-[1.15fr_1fr] lg:gap-14">
+          <div className="grid gap-10 lg:grid-cols-[1.15fr_1fr] lg:items-start lg:gap-14">
             {/* Gallery */}
-            <div data-reveal className="flex gap-4">
+            <div data-reveal className="flex items-start gap-4">
               {images.length > 1 ? (
-                <div className="hidden flex-col gap-3 sm:flex">
+                <div className="hidden w-20 shrink-0 flex-col gap-3 sm:flex">
                   {images.map((img, i) => (
                     <button
                       key={img}
                       onClick={() => setActive(i)}
-                      className={`h-20 w-20 shrink-0 overflow-hidden rounded-xl border-2 transition-colors ${
+                      className={`aspect-[2/3] w-20 shrink-0 overflow-hidden rounded-xl border-2 transition-colors ${
                         active === i ? 'border-gold' : 'border-cream/15 hover:border-cream/40'
                       }`}
                     >
@@ -124,7 +123,7 @@ export default function Product() {
               ) : null}
 
               <div className="relative flex-1 overflow-hidden rounded-[2rem] bg-gradient-to-br from-forest/50 to-ink-soft">
-                <div className="relative aspect-square w-full">
+                <div className="relative aspect-[2/3] w-full">
                   <AnimatePresence mode="wait" initial={false}>
                     <motion.div
                       key={currentImg ?? 'placeholder'}
