@@ -1,5 +1,4 @@
 import { useRef } from 'react'
-import Navbar from '../components/Navbar'
 import { useSiteAnimations } from '../hooks/useSiteAnimations'
 import Hero from '../sections/Hero'
 import Atelier from '../sections/Atelier'
@@ -15,9 +14,7 @@ export default function Home() {
   useSiteAnimations(main)
 
   return (
-    <>
-      <Navbar />
-      <main ref={main}>
+    <main ref={main}>
         <Hero />
         <Atelier />
         <FeaturedProducts />
@@ -26,7 +23,6 @@ export default function Home() {
         <BrandStory />
         <Stories />
         <NewsletterFooter />
-      </main>
-    </>
+    </main>
   )
 }

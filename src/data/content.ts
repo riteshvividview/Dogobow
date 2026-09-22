@@ -26,6 +26,7 @@ export const navLinks = [
 ]
 
 export interface Category {
+  slug: string
   title: string
   lines: [string, string?]
   blurb: string
@@ -37,6 +38,7 @@ export interface Category {
 
 export const categories: Category[] = [
   {
+    slug: 'couture-clothing',
     title: 'Couture & Clothing',
     lines: ['Couture &', 'Clothing'],
     blurb: 'Tuxedos, sherwanis, hoodies & raincoats cut for swagger.',
@@ -46,6 +48,7 @@ export const categories: Category[] = [
     tint: 'from-ember/25',
   },
   {
+    slug: 'walking-essentials',
     title: 'Walking Essentials',
     lines: ['Walking', 'Essentials'],
     blurb: 'Collars, leashes & harnesses built for every adventure.',
@@ -55,6 +58,7 @@ export const categories: Category[] = [
     tint: 'from-gold/25',
   },
   {
+    slug: 'bandanas-bows',
     title: 'Bandanas & Bows',
     lines: ['Bandanas', '& Bows'],
     blurb: 'The finishing flourish, knotted just right.',
@@ -64,6 +68,7 @@ export const categories: Category[] = [
     tint: 'from-moss/60',
   },
   {
+    slug: 'beds-lounge',
     title: 'Beds & Lounge',
     lines: ['Beds &', 'Lounge'],
     blurb: 'Crown beds to sofa beds — sleep like royalty.',
@@ -73,6 +78,7 @@ export const categories: Category[] = [
     tint: 'from-gold-soft/20',
   },
   {
+    slug: 'pet-food',
     title: 'Pet Food',
     lines: ['Pet Food', undefined],
     blurb: 'Wholesome bowls for stronger, happier dogs.',
@@ -82,6 +88,7 @@ export const categories: Category[] = [
     tint: 'from-ember/20',
   },
   {
+    slug: 'personalize-me',
     title: 'Personalize Me',
     lines: ['Personalize', 'Me'],
     blurb: 'Their name, stitched into every last detail.',
@@ -98,12 +105,14 @@ export const showcaseCategories = [
     blurb: c.blurb,
     icon: c.icon,
     slot: c.showcaseSlot,
+    slug: c.slug as string | undefined,
   })),
   {
     title: 'The Festive Edit',
     blurb: 'Diwali, Rakhi, Christmas — every celebration covered.',
     icon: GiftIcon,
     slot: 'festive-edit' as SlotName,
+    slug: undefined,
   },
 ]
 

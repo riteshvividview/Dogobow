@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { gsap, useGSAP } from '../lib/gsap'
+import { Link } from 'react-router-dom'
 import Wave from '../components/Wave'
 import {
   ArrowRight,
@@ -14,6 +15,12 @@ import {
 } from '../components/Icons'
 import Logo from '../components/Logo'
 import { footerColumns } from '../data/content'
+
+const FOOTER_SLUGS: Record<string, string> = {
+  'Couture & Clothing': 'couture-clothing',
+  'Walking Essentials': 'walking-essentials',
+  'Beds & Lounge': 'beds-lounge',
+}
 
 const socials = [
   { label: 'Instagram', icon: InstagramIcon },
@@ -72,13 +79,13 @@ export default function NewsletterFooter() {
               <ul className="mt-6 flex flex-col gap-3.5">
                 {col.links.map((l) => (
                   <li key={l}>
-                    <a
-                      href="#"
+                    <Link
+                      to={FOOTER_SLUGS[l] ? `/collections/${FOOTER_SLUGS[l]}` : '#'}
                       className="group relative inline-block text-[15px] text-cream/80 transition-colors duration-300 hover:text-gold"
                     >
                       {l}
                       <span className="absolute inset-x-0 -bottom-0.5 h-px origin-left scale-x-0 bg-gold transition-transform duration-500 group-hover:scale-x-100" />
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>

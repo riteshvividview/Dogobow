@@ -134,3 +134,27 @@ html.is-loading,
 html.is-loading body {
   overflow: hidden;
 }
+
+/* Theme the scrollbar to match the site instead of the browser default */
+html {
+  scrollbar-color: var(--color-gold) var(--color-ink-soft);
+  scrollbar-width: thin;
+}
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-ink-soft);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--color-gold-soft), var(--color-gold));
+  border-radius: 999px;
+  border: 2px solid var(--color-ink-soft);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gold-soft);
+}
+::-webkit-scrollbar-corner {
+  background: var(--color-ink-soft);
+}

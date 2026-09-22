@@ -1,5 +1,8 @@
+import { Route, Routes } from 'react-router-dom'
 import { useLenis } from './hooks/useLenis'
+import Navbar from './components/Navbar'
 import Home from './pages/Home'
+import Collection from './pages/Collection'
 import Preloader from './components/Preloader'
 
 function App() {
@@ -8,7 +11,11 @@ function App() {
   return (
     <div className="grain">
       <Preloader />
-      <Home />
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/collections/:slug" element={<Collection />} />
+      </Routes>
     </div>
   )
 }

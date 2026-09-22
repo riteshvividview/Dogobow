@@ -273,3 +273,25 @@ export const PauseIcon = ({ size = 20, ...rest }: IconProps) => (
     <rect x="13.8" y="5" width="4.2" height="14" rx="1.2" />
   </svg>
 )
+export const GridIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <rect x="3" y="3" width="7.5" height="7.5" rx="1.5" />
+    <rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5" />
+    <rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5" />
+    <rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5" />
+  </Svg>
+)
+export const ListIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <rect x="3" y="4.5" width="18" height="3.5" rx="1" />
+    <rect x="3" y="10.25" width="18" height="3.5" rx="1" />
+    <rect x="3" y="16" width="18" height="3.5" rx="1" />
+  </Svg>
+)
+export const SlidersIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M4 6h10M18 6h2M4 18h2M10 18h10" />
+    <circle cx="16" cy="6" r="2.2" />
+    <circle cx="8" cy="18" r="2.2" />
+  </Svg>
+)

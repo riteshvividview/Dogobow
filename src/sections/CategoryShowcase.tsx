@@ -3,6 +3,7 @@ import { gsap, useGSAP } from '../lib/gsap'
 import Media, { hasMedia, mediaUrl } from '../components/Media'
 import Button from '../components/Button'
 import Particles from '../components/Particles'
+import { Link } from 'react-router-dom'
 import { ArrowRight, PawIcon } from '../components/Icons'
 import { showcaseCategories } from '../data/content'
 
@@ -229,10 +230,10 @@ export default function CategoryShowcase() {
             className="flex w-max gap-5 px-6 pb-4 will-change-transform sm:px-10 lg:h-full lg:gap-7 lg:px-[max(4rem,calc((100vw-80rem)/2+4rem))] lg:pb-0 lg:pr-24"
           >
             {showcaseCategories.map((c, i) => (
-              <a
+              <Link
                 key={c.title}
                 data-arch
-                href="#"
+                to={c.slug ? `/collections/${c.slug}` : '#'}
                 className="arch group relative flex h-[400px] w-[250px] shrink-0 flex-col overflow-hidden rounded-t-[120px] rounded-b-[3rem] border border-cream/12 transition-[transform,border-color] duration-300 ease-out hover:-translate-y-2 hover:border-gold/60 lg:h-full lg:max-h-[440px] lg:w-[240px]"
               >
                 <span className="arch-glow pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
@@ -271,7 +272,7 @@ export default function CategoryShowcase() {
                     <ArrowRight size={15} />
                   </span>
                 </div>
-              </a>
+              </Link>
             ))}
           </div>
         </div>

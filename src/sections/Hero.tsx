@@ -4,6 +4,7 @@ import { onReady } from '../lib/ready'
 import Media, { hasMedia } from '../components/Media'
 import Button from '../components/Button'
 import Particles from '../components/Particles'
+import { Link } from 'react-router-dom'
 import { ArrowRight, PawIcon } from '../components/Icons'
 import { categories } from '../data/content'
 
@@ -272,8 +273,8 @@ export default function Hero() {
           <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6 lg:gap-4">
           {categories.map((c) => (
             <li key={c.title} data-hero-card>
-              <a
-                href="#"
+              <Link
+                to={`/collections/${c.slug}`}
                 className="glass group relative flex aspect-[11/8] flex-col justify-between overflow-hidden rounded-2xl p-4 transition-all duration-500 hover:-translate-y-2 hover:border-gold/50 hover:shadow-[0_24px_60px_-20px] hover:shadow-gold/40 lg:p-5"
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${c.tint} to-transparent opacity-80`} />
@@ -305,7 +306,7 @@ export default function Hero() {
                     className="mb-0.5 shrink-0 text-gold transition-transform duration-500 group-hover:translate-x-1.5"
                   />
                 </span>
-              </a>
+              </Link>
             </li>
           ))}
           </ul>

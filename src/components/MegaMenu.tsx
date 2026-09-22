@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { AnimatePresence, motion, useMotionValue, useSpring } from 'framer-motion'
 import type { ComponentType, SVGProps } from 'react'
+import { Link } from 'react-router-dom'
 import Media, { hasMedia, type SlotName } from './Media'
 import { ArrowRight, ArrowUpRight, PawIcon } from './Icons'
 import { categories, occasions } from '../data/content'
@@ -13,6 +14,7 @@ interface Entry {
   slot: SlotName
   tag: string
   icon?: Icon
+  slug?: string
 }
 
 const shopEntries: Entry[] = categories.map((c, i) => ({
@@ -20,6 +22,7 @@ const shopEntries: Entry[] = categories.map((c, i) => ({
   blurb: c.blurb,
   slot: c.heroSlot,
   icon: c.icon,
+  slug: c.slug,
   tag: ['Dressed to Impress', 'Made for Walks', 'The Finishing Flourish', 'Sleep Like Royalty', 'Bowl of Joy', 'Made Just for Them'][i],
 }))
 
@@ -64,8 +67,8 @@ function ListMenu({ kind }: { kind: 'shop' | 'collections' }) {
               onMouseEnter={() => setActive(i)}
               onFocus={() => setActive(i)}
             >
-              <a
-                href="#"
+              <Link
+                to={e.slug ? `/collections/${e.slug}` : '#'}
                 className="group relative flex items-center gap-4 border-b border-cream/10 py-3.5"
               >
                 <span
@@ -100,7 +103,7 @@ function ListMenu({ kind }: { kind: 'shop' | 'collections' }) {
                 >
                   <ArrowUpRight size={16} className={active === i ? 'rotate-45 transition-transform duration-500' : 'transition-transform duration-500'} />
                 </span>
-              </a>
+              </Link>
             </motion.li>
           ))}
         </ul>
@@ -171,13 +174,13 @@ function ListMenu({ kind }: { kind: 'shop' | 'collections' }) {
             </motion.p>
           </AnimatePresence>
 
-          <a
-            href="#"
+          <Link
+            to={current.slug ? `/collections/${current.slug}` : '#'}
             className="group absolute bottom-5 left-5 right-5 flex items-center justify-between rounded-full border border-cream/20 bg-ink/50 px-5 py-3 text-sm text-cream backdrop-blur-md transition-colors duration-300 hover:border-gold hover:bg-gold hover:text-ink"
           >
             <span className="truncate">Explore {current.title}</span>
             <ArrowRight size={16} className="ml-3 shrink-0 transition-transform duration-500 group-hover:translate-x-1" />
-          </a>
+          </Link>
         </div>
       </div>
     </div>
