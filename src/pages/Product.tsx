@@ -103,7 +103,7 @@ export default function Product() {
             <span className="text-cream">{product.name}</span>
           </nav>
 
-          <div className="grid gap-10 lg:grid-cols-[1.2fr_1.1fr_0.6fr] lg:items-start lg:gap-8">
+          <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr_0.75fr] lg:items-start lg:gap-10">
             {/* Gallery */}
             <div data-reveal className="flex items-start gap-4">
               {images.length > 1 ? (
@@ -285,7 +285,7 @@ export default function Product() {
             </div>
 
             {/* Trust + cross-sell */}
-            <div data-reveal data-reveal-delay={0.16} className="lg:border-l lg:border-cream/10 lg:pl-6">
+            <div data-reveal data-reveal-delay={0.16} className="lg:border-l lg:border-cream/10 lg:pl-10">
               {product.features?.length ? (
                 <ul className="flex flex-col gap-5">
                   {product.features.map((f, i) => {
