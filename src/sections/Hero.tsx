@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
-import { gsap, useGSAP } from '../lib/gsap'
+import { useRef } from 'react'
+import { gsap, SplitText, useGSAP } from '../lib/gsap'
 import { onReady } from '../lib/ready'
 import Media, { hasMedia } from '../components/Media'
 import Button from '../components/Button'
@@ -59,16 +59,44 @@ export default function Hero() {
   const root = useRef<HTMLElement>(null)
   const content = useRef<HTMLDivElement>(null)
 
-  // Deliberately no entrance animation: the background photo shows alone
-  // first, then the copy and category cards snap in as soon as the loader
-  // hands off — no fade, no slide.
-  const [ready, setReady] = useState(false)
-  useEffect(() => {
-    onReady(() => setReady(true))
-  }, [])
-
   useGSAP(
     () => {
+      // Built once, synchronously, inside the live GSAP context so React 18
+      // StrictMode's mount→cleanup→mount dance in dev reverts a stale build
+      // cleanly instead of leaving hero-card etc. stuck at their hidden
+      // "from" state. Only playback is deferred to the loader finishing.
+      const intro = gsap.timeline({ paused: true })
+
+      SplitText.create('[data-hero-title]', {
+        type: 'lines',
+        mask: 'lines',
+        autoSplit: true,
+        onSplit: (self) =>
+          intro.from(
+            self.lines,
+            { yPercent: 115, duration: 1.5, stagger: 0.15, ease: 'power4.out' },
+            0.3,
+          ),
+      })
+
+      intro.from(
+        '[data-hero-fade]',
+        { autoAlpha: 0, y: 28, duration: 1.1, stagger: 0.12, ease: 'power3.out' },
+        0.95,
+      )
+      intro.from(
+        '[data-hero-card]',
+        { autoAlpha: 0, y: 90, duration: 1.3, stagger: 0.09, ease: 'power4.out' },
+        1.15,
+      )
+      intro.from(
+        '[data-hero-ring]',
+        { scale: 0.7, autoAlpha: 0, duration: 2.2, ease: 'expo.out' },
+        0.3,
+      )
+
+      onReady(() => intro.play())
+
       gsap.to('[data-hero-rays]', {
         rotation: 7,
         opacity: 0.6,
@@ -180,31 +208,35 @@ export default function Hero() {
         className="pointer-events-none absolute -left-44 top-[44%] hidden h-[560px] w-[560px] -translate-y-1/2 rounded-full border border-cream/15 lg:block"
       />
 
-      {/* Copy — the outer node is GSAP's scroll-fade target; the inner one is the
-          instant reveal gate. Kept on separate elements so GSAP's inline opacity
-          (from the scroll tween) can never fight the React-driven reveal class. */}
+      {/* Copy */}
       <div
         ref={content}
         className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-6 pb-4 pt-28 sm:px-10 lg:px-16 lg:pt-[max(5.5rem,13vh)]"
       >
-        <div className={`max-w-3xl lg:w-[72%] lg:max-w-none ${ready ? 'opacity-100' : 'opacity-0'}`}>
-          <p className="flex items-center gap-4 text-[11px] uppercase tracking-[0.34em] text-cream/75">
+        <div className="max-w-3xl lg:w-[72%] lg:max-w-none">
+          <p
+            data-hero-fade
+            className="flex items-center gap-4 text-[11px] uppercase tracking-[0.34em] text-cream/75"
+          >
             <span className="h-px w-10 bg-gold" />
             Handcrafted in Hyderabad
           </p>
 
-          <h1 className="mt-[max(0.75rem,2vh)] font-display text-[clamp(2.2rem,min(4.3vw,7.6vh),4.2rem)] font-medium leading-[1.04] tracking-tight text-cream">
+          <h1
+            data-hero-title
+            className="mt-[max(0.75rem,2vh)] font-display text-[clamp(2.2rem,min(4.3vw,7.6vh),4.2rem)] font-medium leading-[1.04] tracking-tight text-cream"
+          >
             <span className="block">Designed for Dogs.</span>
             <span className="block">Obsessed Over</span>
             <span className="block italic text-gold-soft">by Their Humans.</span>
           </h1>
 
-          <p className="mt-[max(1rem,2.4vh)] max-w-md text-[15px] leading-relaxed text-cream/70 [@media(max-height:640px)]:hidden">
+          <p data-hero-fade className="mt-[max(1rem,2.4vh)] max-w-md text-[15px] leading-relaxed text-cream/70 [@media(max-height:640px)]:hidden">
             Couture that wags, collars that turn heads and beds worth the nap — handcrafted for
             dogs who never do ordinary.
           </p>
 
-          <div className="mt-[max(1.25rem,3.2vh)]">
+          <div data-hero-fade className="mt-[max(1.25rem,3.2vh)]">
             <Button variant="circle">Shop the Collection</Button>
           </div>
         </div>
@@ -212,7 +244,8 @@ export default function Hero() {
 
       {/* Handwritten note */}
       <div
-        className={`pointer-events-none absolute right-[10%] top-[24%] z-10 hidden -rotate-6 font-script text-6xl leading-[0.85] text-cream/90 lg:block ${ready ? 'opacity-100' : 'opacity-0'}`}
+        data-hero-fade
+        className="pointer-events-none absolute right-[10%] top-[24%] z-10 hidden -rotate-6 font-script text-6xl leading-[0.85] text-cream/90 lg:block"
       >
         Good Dogs
         <br />
@@ -223,11 +256,9 @@ export default function Hero() {
       </div>
 
       {/* Category strip, floating over the same photograph. Card size follows window height so the row always fits. */}
-      <div
-        className={`relative z-10 w-full px-6 pb-6 sm:px-10 lg:px-8 lg:pb-[max(1.5rem,4.5vh)] ${ready ? 'opacity-100' : 'opacity-0'}`}
-      >
+      <div className="relative z-10 w-full px-6 pb-6 sm:px-10 lg:px-8 lg:pb-[max(1.5rem,4.5vh)]">
         <div className="mx-auto w-full lg:max-w-[min(1275px,calc(173vh_+_5rem))]">
-          <div className="mb-3 flex items-center gap-4">
+          <div data-hero-fade className="mb-3 flex items-center gap-4">
             <span className="text-[11px] uppercase tracking-[0.34em] text-cream/70">
               Shop by Category
             </span>
@@ -236,7 +267,7 @@ export default function Hero() {
 
           <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6 lg:gap-4">
           {categories.map((c) => (
-            <li key={c.title}>
+            <li key={c.title} data-hero-card>
               <Link
                 to={`/collections/${c.slug}`}
                 className="glass group relative flex aspect-[11/8] flex-col justify-between overflow-hidden rounded-2xl p-4 transition-all duration-500 hover:-translate-y-2 hover:border-gold/50 hover:shadow-[0_24px_60px_-20px] hover:shadow-gold/40 lg:p-5"
