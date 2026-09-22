@@ -268,8 +268,15 @@ function CollectionHero({ def }: { def: CollectionDef }) {
   return (
     <section className="relative flex min-h-[74vh] w-full flex-col justify-end overflow-hidden bg-ink pt-28 sm:min-h-[78vh]">
       <Media eager slot={def.heroSlot} className="absolute inset-0 h-full w-full object-cover" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-ink/92 via-ink/55 to-ink/10" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink via-ink/10 to-ink/50" />
+      {/* Dark fade concentrated bottom-left (for the copy) and a light top-left fade; right side stays clear. */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{ background: 'radial-gradient(75% 100% at 0% 100%, rgba(10,12,9,0.95), transparent 65%)' }}
+      />
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{ background: 'radial-gradient(45% 55% at 0% 0%, rgba(10,12,9,0.6), transparent 70%)' }}
+      />
 
       <p
         data-reveal
