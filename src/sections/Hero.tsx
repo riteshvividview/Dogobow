@@ -67,35 +67,52 @@ export default function Hero() {
       // "from" state. Only playback is deferred to the loader finishing.
       const intro = gsap.timeline({ paused: true })
 
+      // A paused timeline only renders a .from() tween's hidden starting
+      // state once playback actually reaches that tween's position — tweens
+      // scheduled later (fade at 1.1s, cards at 1.6s) otherwise sit fully
+      // visible the whole time, then flash hidden right as their turn comes
+      // up. Forcing one full render pass (end, then back to the start)
+      // immediately after building the timeline makes every tween apply its
+      // "from" state up front, so everything is genuinely hidden until play().
+      const primeHiddenState = () => intro.progress(1).progress(0)
+
       SplitText.create('[data-hero-title]', {
         type: 'lines',
         mask: 'lines',
         autoSplit: true,
-        onSplit: (self) =>
+        onSplit: (self) => {
           intro.from(
             self.lines,
-            { yPercent: 115, duration: 1.5, stagger: 0.15, ease: 'power4.out' },
-            0.3,
-          ),
+            { yPercent: 115, duration: 2.2, stagger: 0.28, ease: 'power4.out' },
+            0,
+          )
+          primeHiddenState()
+        },
       })
 
       intro.from(
         '[data-hero-fade]',
-        { autoAlpha: 0, y: 28, duration: 1.1, stagger: 0.12, ease: 'power3.out' },
-        0.95,
+        { autoAlpha: 0, y: 32, duration: 1.6, stagger: 0.18, ease: 'power3.out' },
+        1.1,
       )
       intro.from(
         '[data-hero-card]',
-        { autoAlpha: 0, y: 90, duration: 1.3, stagger: 0.09, ease: 'power4.out' },
-        1.15,
+        { autoAlpha: 0, y: 90, duration: 1.8, stagger: 0.12, ease: 'power4.out' },
+        1.6,
       )
       intro.from(
         '[data-hero-ring]',
-        { scale: 0.7, autoAlpha: 0, duration: 2.2, ease: 'expo.out' },
-        0.3,
+        { scale: 0.7, autoAlpha: 0, duration: 2.8, ease: 'expo.out' },
+        0,
       )
+      primeHiddenState()
 
-      onReady(() => intro.play())
+      // The page sits with only its background showing for a beat before the
+      // (slower, more deliberate) entrance begins — not the instant the
+      // loader's curtain clears.
+      onReady(() => {
+        gsap.delayedCall(1.4, () => intro.play())
+      })
 
       gsap.to('[data-hero-rays]', {
         rotation: 7,

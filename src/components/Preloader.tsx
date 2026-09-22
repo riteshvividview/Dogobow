@@ -91,12 +91,17 @@ export default function Preloader() {
       setUI(1)
       glowPulse.kill()
       exitTl = gsap.timeline({
+        // Fires once the curtain has fully cleared the screen — the page is
+        // sitting there with just its background, nothing has animated in
+        // yet. That's the moment Hero is allowed to start its own (separately
+        // delayed) entrance, not partway through the curtain sliding away.
         onComplete: () => {
           pawBob.kill()
           html.classList.remove('is-loading')
           setGone(true)
           window.dispatchEvent(new Event('resize'))
           warmRest(new Set(critical))
+          markReady()
         },
       })
       if (reduce) {
@@ -105,7 +110,6 @@ export default function Preloader() {
       }
       exitTl
         .to('[data-pre-stage]', { scale: 1.08, autoAlpha: 0, y: -30, duration: 0.7, ease: 'power2.in' }, 0.35)
-        .add(markReady, 0.95)
         .to('[data-pre-top]', { yPercent: -101, duration: 1.15, ease: 'power4.inOut' }, 0.95)
         .to('[data-pre-bottom]', { yPercent: 101, duration: 1.15, ease: 'power4.inOut' }, 0.95)
     }
