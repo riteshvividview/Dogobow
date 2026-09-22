@@ -236,8 +236,8 @@ function CollectionsSpotlight() {
       {/* Centre: static spotlight for the active occasion */}
       <div>
         <p className="mb-3 text-[11px] uppercase tracking-[0.34em] text-gold">The Occasion Edit</p>
-        <div className="overflow-hidden rounded-[1.75rem] border border-cream/10 bg-forest/40">
-          <div className="relative h-[190px] overflow-hidden bg-gradient-to-br from-moss to-forest">
+        <div className="overflow-hidden rounded-[1.75rem] border border-cream/10 bg-forest/40 p-5 pb-0">
+          <div className="relative mx-auto aspect-square w-full max-w-[220px] overflow-hidden rounded-2xl bg-gradient-to-br from-moss to-forest">
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={current.slot}
@@ -248,7 +248,7 @@ function CollectionsSpotlight() {
                 className="absolute inset-0"
               >
                 {hasMedia(current.slot) ? (
-                  <Media eager slot={current.slot} className="h-full w-full object-contain object-bottom" />
+                  <Media eager slot={current.slot} className="h-full w-full object-cover" />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center">
                     <PawIcon size={64} className="text-gold/25" />
