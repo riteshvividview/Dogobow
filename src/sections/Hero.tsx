@@ -83,7 +83,7 @@ export default function Hero() {
         onSplit: (self) => {
           intro.from(
             self.lines,
-            { yPercent: 115, duration: 2.2, stagger: 0.28, ease: 'power4.out' },
+            { yPercent: 115, duration: 1.1, stagger: 0.12, ease: 'power4.out' },
             0,
           )
           primeHiddenState()
@@ -92,17 +92,17 @@ export default function Hero() {
 
       intro.from(
         '[data-hero-fade]',
-        { autoAlpha: 0, y: 32, duration: 1.6, stagger: 0.18, ease: 'power3.out' },
-        1.1,
+        { autoAlpha: 0, y: 24, duration: 0.8, stagger: 0.08, ease: 'power3.out' },
+        0.45,
       )
       intro.from(
         '[data-hero-card]',
-        { autoAlpha: 0, y: 90, duration: 1.8, stagger: 0.12, ease: 'power4.out' },
-        1.6,
+        { autoAlpha: 0, y: 60, duration: 0.85, stagger: 0.06, ease: 'power4.out' },
+        0.65,
       )
       intro.from(
         '[data-hero-ring]',
-        { scale: 0.7, autoAlpha: 0, duration: 2.8, ease: 'expo.out' },
+        { scale: 0.7, autoAlpha: 0, duration: 1.4, ease: 'expo.out' },
         0,
       )
       primeHiddenState()
@@ -111,7 +111,7 @@ export default function Hero() {
       // (slower, more deliberate) entrance begins — not the instant the
       // loader's curtain clears.
       onReady(() => {
-        gsap.delayedCall(1.4, () => intro.play())
+        gsap.delayedCall(0.4, () => intro.play())
       })
 
       gsap.to('[data-hero-rays]', {
