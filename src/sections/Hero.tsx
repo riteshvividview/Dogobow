@@ -111,7 +111,7 @@ export default function Hero() {
       // (slower, more deliberate) entrance begins — not the instant the
       // loader's curtain clears.
       onReady(() => {
-        gsap.delayedCall(0.4, () => intro.play())
+        gsap.delayedCall(0.3, () => intro.play())
       })
 
       gsap.to('[data-hero-rays]', {
