@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { navLinks } from '../data/content'
+import { useCart } from '../context/CartContext'
+import { useWishlist } from '../context/WishlistContext'
 import MegaMenu from './MegaMenu'
 import Logo from './Logo'
 import {
@@ -15,9 +17,10 @@ import {
 } from './Icons'
 
 function Badge({ n }: { n: number }) {
+  if (n <= 0) return null
   return (
     <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-gold text-[9px] font-semibold text-ink">
-      {n}
+      {n > 9 ? '9+' : n}
     </span>
   )
 }
@@ -28,6 +31,8 @@ export default function Navbar() {
   const [hidden, setHidden] = useState(false)
   const [menu, setMenu] = useState<'shop' | 'collections' | null>(null)
   const { pathname } = useLocation()
+  const { count: cartCount, openDrawer } = useCart()
+  const { count: wishlistCount } = useWishlist()
 
   useEffect(() => {
     setMenu(null)
@@ -98,13 +103,13 @@ export default function Navbar() {
           <button aria-label="Account" className="hidden text-cream/85 transition-colors hover:text-gold sm:block">
             <UserIcon size={20} />
           </button>
-          <button aria-label="Wishlist" className="relative hidden text-cream/85 transition-colors hover:text-gold sm:block">
+          <Link to="/wishlist" aria-label="Wishlist" className="relative hidden text-cream/85 transition-colors hover:text-gold sm:block">
             <HeartIcon size={20} />
-            <Badge n={3} />
-          </button>
-          <button aria-label="Cart" className="relative text-cream/85 transition-colors hover:text-gold">
+            <Badge n={wishlistCount} />
+          </Link>
+          <button aria-label="Cart" onClick={openDrawer} className="relative text-cream/85 transition-colors hover:text-gold">
             <BagIcon size={20} />
-            <Badge n={0} />
+            <Badge n={cartCount} />
           </button>
           <button
             aria-label="Toggle menu"

@@ -302,3 +302,15 @@ export const PercentIcon = (p: IconProps) => (
     <circle cx="17" cy="17" r="2.5" />
   </Svg>
 )
+export const TrashIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M4 7h16M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2m3 0-.8 12.100A2 2 0 0 1 15.200 21H8.800a2 2 0 0 1-2-1.900L6 7Z" />
+    <path d="M10 11v6M14 11v6" />
+  </Svg>
+)
+export const LockIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <rect x="5" y="11" width="14" height="10" rx="2" />
+    <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+  </Svg>
+)

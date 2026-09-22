@@ -22,6 +22,9 @@ import {
 import { formatINR } from '../data/content'
 import { collections, SWATCHES, collectionsBySlug } from '../data/collections'
 import { ProductCard } from './Collection'
+import { useCart } from '../context/CartContext'
+import { useWishlist } from '../context/WishlistContext'
+import { useToast } from '../context/ToastContext'
 
 const ease = [0.22, 1, 0.36, 1] as const
 const featureIcons = [ScissorsIcon, ShieldCheck, RulerIcon, CheckIcon]
@@ -30,6 +33,9 @@ export default function Product() {
   const { slug, id } = useParams<{ slug: string; id: string }>()
   const main = useRef<HTMLElement>(null)
   useSiteAnimations(main)
+  const { addToCart, openDrawer } = useCart()
+  const { isWished, toggle: toggleWishlist } = useWishlist()
+  const { show } = useToast()
 
   const def = slug ? collectionsBySlug[slug] : undefined
   const product = def?.products.find((p) => p.id === id)
@@ -40,7 +46,6 @@ export default function Product() {
     () => collections.find((c) => c.slug !== slug && c.products.length > 0),
     [slug],
   )
-  const [otherWishlist, setOtherWishlist] = useState<Set<string>>(new Set())
 
   const images = useMemo(() => {
     if (!product) return []
@@ -51,13 +56,14 @@ export default function Product() {
 
   const [active, setActive] = useState(0)
   const [size, setSize] = useState(product?.sizes[0] ?? '')
+  const [sizeError, setSizeError] = useState(false)
   const [qty, setQty] = useState(1)
-  const [wished, setWished] = useState(false)
   const [tab, setTab] = useState<'overview' | 'care' | 'reviews'>('overview')
 
   useEffect(() => {
     setActive(0)
     setSize(product?.sizes[0] ?? '')
+    setSizeError(false)
     setQty(1)
     setTab('overview')
     const t = window.setTimeout(() => ScrollTrigger.refresh(), 60)
@@ -225,23 +231,29 @@ export default function Product() {
 
               <div className="mt-7">
                 <p className="mb-2.5 text-sm text-cream/70">
-                  Size <span className="text-cream">— {size}</span>
+                  Size {size ? <span className="text-cream">— {size}</span> : null}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {product.sizes.map((s) => (
                     <button
                       key={s}
-                      onClick={() => setSize(s)}
+                      onClick={() => {
+                        setSize(s)
+                        setSizeError(false)
+                      }}
                       className={`rounded-full border px-4 py-2 text-sm transition-colors ${
                         size === s
                           ? 'border-gold bg-gold text-ink'
-                          : 'border-cream/20 text-cream/75 hover:border-cream/50'
+                          : sizeError
+                            ? 'border-red-400/60 text-cream/75'
+                            : 'border-cream/20 text-cream/75 hover:border-cream/50'
                       }`}
                     >
                       {s}
                     </button>
                   ))}
                 </div>
+                {sizeError ? <p className="mt-2 text-xs text-red-400">Please select a size.</p> : null}
               </div>
 
               <div className="mt-5 flex items-center gap-2">
@@ -273,21 +285,47 @@ export default function Product() {
                     +
                   </button>
                 </div>
-                <button className="flex flex-1 min-w-[10rem] items-center justify-center gap-2 rounded-full bg-gold px-6 py-3 text-sm font-medium text-ink transition-transform hover:scale-[1.02]">
+                <button
+                  onClick={() => {
+                    if (product.sizes.length > 0 && !size) {
+                      setSizeError(true)
+                      return
+                    }
+                    addToCart(def.slug, product.id, size || 'One Size', product.colors[0] ?? '', qty)
+                    show(`${product.name} added to your bag`, 'cart')
+                  }}
+                  className="flex flex-1 min-w-[10rem] items-center justify-center gap-2 rounded-full bg-gold px-6 py-3 text-sm font-medium text-ink transition-transform hover:scale-[1.02]"
+                >
                   <BagIcon size={16} />
                   Add to Cart
                 </button>
                 <button
                   aria-label="Add to wishlist"
-                  onClick={() => setWished((w) => !w)}
+                  onClick={() => {
+                    const wasWished = isWished(def.slug, product.id)
+                    toggleWishlist(def.slug, product.id)
+                    show(wasWished ? `${product.name} removed from wishlist` : `${product.name} added to wishlist`, 'wishlist')
+                  }}
                   className={`flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-full border transition-colors ${
-                    wished ? 'border-gold bg-gold text-ink' : 'border-cream/20 text-cream/70 hover:border-gold/50'
+                    isWished(def.slug, product.id)
+                      ? 'border-gold bg-gold text-ink'
+                      : 'border-cream/20 text-cream/70 hover:border-gold/50'
                   }`}
                 >
-                  <HeartIcon size={17} fill={wished ? 'currentColor' : 'none'} />
+                  <HeartIcon size={17} fill={isWished(def.slug, product.id) ? 'currentColor' : 'none'} />
                 </button>
               </div>
-              <button className="mt-3 w-full rounded-full border border-cream/25 py-3 text-sm font-medium text-cream transition-colors hover:border-gold hover:text-gold">
+              <button
+                onClick={() => {
+                  if (product.sizes.length > 0 && !size) {
+                    setSizeError(true)
+                    return
+                  }
+                  addToCart(def.slug, product.id, size || 'One Size', product.colors[0] ?? '', qty)
+                  openDrawer()
+                }}
+                className="mt-3 w-full rounded-full border border-cream/25 py-3 text-sm font-medium text-cream transition-colors hover:border-gold hover:text-gold"
+              >
                 Buy Now
               </button>
 
@@ -481,15 +519,8 @@ export default function Product() {
                     p={p}
                     slug={otherCollection.slug}
                     index={i}
-                    wished={otherWishlist.has(p.id)}
-                    toggleWish={() =>
-                      setOtherWishlist((prev) => {
-                        const next = new Set(prev)
-                        if (next.has(p.id)) next.delete(p.id)
-                        else next.add(p.id)
-                        return next
-                      })
-                    }
+                    wished={isWished(otherCollection.slug, p.id)}
+                    toggleWish={() => toggleWishlist(otherCollection.slug, p.id)}
                   />
                 </li>
               ))}

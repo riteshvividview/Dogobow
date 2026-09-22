@@ -21,6 +21,7 @@ import {
 } from '../components/Icons'
 import { formatINR } from '../data/content'
 import { SWATCHES, collectionsBySlug, type CollectionDef, type CollectionProduct } from '../data/collections'
+import { useWishlist } from '../context/WishlistContext'
 
 const TRUST_CHIPS = [
   { label: 'Premium Materials', icon: SparkleIcon },
@@ -70,7 +71,7 @@ export default function Collection() {
   const [sort, setSort] = useState<Sort>('featured')
   const [view, setView] = useState<'grid' | 'list'>('grid')
   const [sortOpen, setSortOpen] = useState(false)
-  const [wishlist, setWishlist] = useState<Set<string>>(new Set())
+  const { isWished, toggle: toggleWishlist } = useWishlist()
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -246,15 +247,8 @@ export default function Collection() {
                         p={p}
                         slug={def.slug}
                         index={i}
-                        wished={wishlist.has(p.id)}
-                        toggleWish={() =>
-                          setWishlist((prev) => {
-                            const next = new Set(prev)
-                            if (next.has(p.id)) next.delete(p.id)
-                            else next.add(p.id)
-                            return next
-                          })
-                        }
+                        wished={isWished(def.slug, p.id)}
+                        toggleWish={() => toggleWishlist(def.slug, p.id)}
                       />
                     </li>
                   ))}
