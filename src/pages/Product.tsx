@@ -398,7 +398,7 @@ export default function Product() {
                     <PawIcon size={80} className="text-gold-deep/15" />
                   </div>
                 )}
-                <p className="pointer-events-none absolute bottom-6 left-6 -rotate-2 font-script text-4xl leading-none text-ink/85">
+                <p className="pointer-events-none absolute bottom-6 left-6 -rotate-2 mix-blend-difference font-script text-4xl leading-none text-white">
                   Happy Dogs.
                   <br />
                   Better Style.
