@@ -90,6 +90,21 @@ export const SLOTS = [
   'Orange Denim Jacket-product-with-dog',
   'Red-Denim-Jacket-product',
   'Red-Denim-Jacket-product-with-dog',
+  // Collections — Walking Essentials
+  'Bandi Bandi Martingale (1.5 inch width) product',
+  'Bandi Bandi Martingale (1.5 inch width) with dog',
+  'Hearty Blue print Martingale Collar (1.5 inch width) product',
+  'Hearty Blue print Martingale Collar (1.5 inch width) with dog',
+  'Monster Print Martingale Collar (1.5 inch width) product',
+  'Monster Print Martingale Collar (1.5 inch width) with dog',
+  'Orange Hot Air Balloon Martingale Collar (1.5 inch width) product',
+  'Orange Hot Air Balloon Martingale Collar (1.5 inch width) with dog',
+  'Panda Martingale Collar (1.5 inch width) product',
+  'Panda Martingale Collar (1.5 inch width) with dog',
+  'Red Hawaii Martingale Collar (1.5 inch width) product',
+  'Red Hawaii Martingale Collar (1.5 inch width) with dog',
+  'Teal-Pink Aztec Martingale Collar (1.5 inch width) product',
+  'Teal-Pink Aztec Martingale Collar (1.5 inch width) with dog',
 ] as const
 
 export type SlotName = (typeof SLOTS)[number]
