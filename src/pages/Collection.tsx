@@ -244,6 +244,7 @@ export default function Collection() {
                     <li key={p.id}>
                       <ProductCard
                         p={p}
+                        slug={def.slug}
                         index={i}
                         wished={wishlist.has(p.id)}
                         toggleWish={() =>
@@ -474,18 +475,22 @@ function FilterSidebar({
 
 function ProductCard({
   p,
+  slug,
   index,
   wished,
   toggleWish,
 }: {
   p: CollectionProduct
+  slug: string
   index: number
   wished: boolean
   toggleWish: () => void
 }) {
   return (
     <article data-reveal data-reveal-delay={Math.min(index, 6) * 0.06} className="group">
-      <div className="relative aspect-[3/4] overflow-hidden rounded-[1.5rem] bg-gradient-to-b from-ink-soft to-forest/40 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.7)] transition-shadow duration-500 group-hover:shadow-[0_44px_80px_-30px_rgba(0,0,0,0.85)]">
+      <Link
+        to={`/collections/${slug}/product/${p.id}`}
+        className="relative block aspect-[3/4] overflow-hidden rounded-[1.5rem] bg-gradient-to-b from-ink-soft to-forest/40 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.7)] transition-shadow duration-500 group-hover:shadow-[0_44px_80px_-30px_rgba(0,0,0,0.85)]">
         {!p.slot || !hasMedia(p.slot) ? (
           <>
             <div
@@ -519,7 +524,10 @@ function ProductCard({
 
         <button
           aria-label={`Add ${p.name} to wishlist`}
-          onClick={toggleWish}
+          onClick={(e) => {
+            e.preventDefault()
+            toggleWish()
+          }}
           className={`absolute right-3.5 top-3.5 flex h-9 w-9 items-center justify-center rounded-full backdrop-blur transition-colors duration-300 ${
             wished ? 'bg-gold text-ink' : 'bg-ink/40 text-cream hover:bg-ink/60'
           }`}
@@ -527,14 +535,14 @@ function ProductCard({
           <HeartIcon size={16} fill={wished ? 'currentColor' : 'none'} />
         </button>
 
-        <button className="absolute inset-x-3.5 bottom-3.5 flex translate-y-[220%] items-center justify-center gap-2 rounded-full bg-cream py-2.5 text-sm font-medium text-ink transition-transform duration-500 group-hover:translate-y-0">
+        <span className="absolute inset-x-3.5 bottom-3.5 flex translate-y-[220%] items-center justify-center gap-2 rounded-full bg-cream py-2.5 text-sm font-medium text-ink transition-transform duration-500 group-hover:translate-y-0">
           <BagIcon size={15} />
-          Quick Add
-        </button>
-      </div>
+          View Product
+        </span>
+      </Link>
 
-      <div className="pt-4">
-        <h3 className="font-display text-[1.05rem] leading-snug text-cream">{p.name}</h3>
+      <Link to={`/collections/${slug}/product/${p.id}`} className="mt-4 block">
+        <h3 className="font-display text-[1.05rem] leading-snug text-cream transition-colors group-hover:text-gold-soft">{p.name}</h3>
         <p className="mt-1 text-[13px] text-cream/55">{p.blurb}</p>
 
         <div className="mt-2 flex items-center gap-1.5">
@@ -564,7 +572,7 @@ function ProductCard({
             />
           ))}
         </div>
-      </div>
+      </Link>
     </article>
   )
 }

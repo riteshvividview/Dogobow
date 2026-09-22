@@ -67,6 +67,29 @@ export const SLOTS = [
   'review-4',
   // Newsletter / footer
   'footer-bg',
+  // Collections — Couture & Clothing
+  'Red-Aztec-Knit-Sweater-product',
+  'Red-Aztec-Knit-Sweater-product-with-dog',
+  'Sun-kissed-Yellow-Knit-Sweater-product',
+  'Sun-kissed-Yellow-Knit-Sweater-product-with-dog',
+  'Blue-Panda-Knit-Sweater-product',
+  'Blue-Panda-Knit-Sweater-product-with-dog',
+  'Red-Reindeer-Knit-Sweater-product',
+  'Red-Reindeer-Knit-Sweater-product-with-dog',
+  'Pom-Pom-Winter-Hoodie',
+  'Pom-Pom-Winter-Hoodie-with-dog',
+  'The-Good-Dino-Hoodie',
+  'The-Good-Dino-Hoodie-with-dog',
+  'Red-Black-Hoodies-product',
+  'Red-Black-Hoodies-product-with-dog',
+  'Rainbow-Fur Jacket-product',
+  'Rainbow-Fur Jacket-product-with-dog',
+  'Navy-Blue-Denim-Jacket-product',
+  'Navy-Blue-Denim-Jacket-product-with-dog',
+  'Orange Denim Jacket-product',
+  'Orange Denim Jacket-product-with-dog',
+  'Red-Denim-Jacket-product',
+  'Red-Denim-Jacket-product-with-dog',
 ] as const
 
 export type SlotName = (typeof SLOTS)[number]
