@@ -143,9 +143,9 @@ export default function Product() {
                     </motion.div>
                   </AnimatePresence>
 
-                  <p className="pointer-events-none absolute left-6 top-6 -rotate-3 font-script text-3xl leading-none text-cream/90 drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
+                  <p className="pointer-events-none absolute left-6 top-6 -rotate-3 mix-blend-difference font-script text-3xl leading-none text-white">
                     {product.blurb}
-                    <PawIcon size={14} className="ml-2 inline text-gold" />
+                    <PawIcon size={14} className="ml-2 inline" />
                   </p>
 
                   {images.length > 1 ? (
