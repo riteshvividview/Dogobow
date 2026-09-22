@@ -194,17 +194,6 @@ export const collections: CollectionDef[] = [
         careNote: 'Spot clean the cotton webbing and wipe the hardware dry after wet walks.',
       },
       {
-        id: 'wk-08',
-        name: 'Metal Chain Collar',
-        blurb: 'Unique designs. Same love.',
-        price: 999,
-        rating: 4.3,
-        reviews: 145,
-        sizes: ['M', 'L'],
-        materials: ['Metal'],
-        colors: ['Gold', 'Grey'],
-      },
-      {
         id: 'wk-09',
         name: 'Aztec Print Collar',
         blurb: 'Timeless. Durable. Elegant.',
