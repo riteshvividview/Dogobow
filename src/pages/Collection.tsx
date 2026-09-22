@@ -473,7 +473,7 @@ function FilterSidebar({
   )
 }
 
-function ProductCard({
+export function ProductCard({
   p,
   slug,
   index,

@@ -19,7 +19,8 @@ import {
   TruckIcon,
 } from '../components/Icons'
 import { formatINR } from '../data/content'
-import { SWATCHES, collectionsBySlug } from '../data/collections'
+import { collections, SWATCHES, collectionsBySlug } from '../data/collections'
+import { ProductCard } from './Collection'
 
 const ease = [0.22, 1, 0.36, 1] as const
 const featureIcons = [ScissorsIcon, ShieldCheck, RulerIcon, CheckIcon]
@@ -33,6 +34,12 @@ export default function Product() {
   const product = def?.products.find((p) => p.id === id)
   const siblings = def ? def.products.filter((p) => p.id !== id) : []
   const nextUp = siblings[0]
+
+  const otherCollection = useMemo(
+    () => collections.find((c) => c.slug !== slug && c.products.length > 0),
+    [slug],
+  )
+  const [otherWishlist, setOtherWishlist] = useState<Set<string>>(new Set())
 
   const images = useMemo(() => {
     if (!product) return []
@@ -445,6 +452,49 @@ export default function Product() {
           ) : null}
         </div>
       </section>
+
+      {otherCollection ? (
+        <section className="bg-ink pb-24 pt-20 text-cream">
+          <div className="mx-auto max-w-7xl px-6 sm:px-10 lg:px-16">
+            <div data-reveal className="mb-10 flex flex-wrap items-end justify-between gap-4 border-b border-cream/10 pb-7">
+              <div>
+                <p className="text-[11px] uppercase tracking-[0.32em] text-gold">Explore More</p>
+                <h2 className="mt-3 font-display text-[clamp(1.9rem,3.4vw,2.6rem)] leading-tight">
+                  From {otherCollection.breadcrumb}
+                </h2>
+              </div>
+              <Link
+                to={`/collections/${otherCollection.slug}`}
+                className="flex items-center gap-2 text-sm text-cream/70 transition-colors hover:text-gold"
+              >
+                View Collection
+                <ArrowRight size={15} />
+              </Link>
+            </div>
+
+            <ul data-stagger className="grid grid-cols-2 gap-x-5 gap-y-12 sm:gap-x-6 lg:grid-cols-4">
+              {otherCollection.products.slice(0, 4).map((p, i) => (
+                <li key={p.id}>
+                  <ProductCard
+                    p={p}
+                    slug={otherCollection.slug}
+                    index={i}
+                    wished={otherWishlist.has(p.id)}
+                    toggleWish={() =>
+                      setOtherWishlist((prev) => {
+                        const next = new Set(prev)
+                        if (next.has(p.id)) next.delete(p.id)
+                        else next.add(p.id)
+                        return next
+                      })
+                    }
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      ) : null}
 
       <NewsletterFooter />
     </main>
