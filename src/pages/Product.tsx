@@ -103,7 +103,7 @@ export default function Product() {
             <span className="text-cream">{product.name}</span>
           </nav>
 
-          <div className="grid gap-10 lg:grid-cols-[1.15fr_1fr] lg:items-start lg:gap-14">
+          <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr_0.75fr] lg:items-start lg:gap-10">
             {/* Gallery */}
             <div data-reveal className="flex items-start gap-4">
               {images.length > 1 ? (
@@ -282,9 +282,12 @@ export default function Product() {
               <button className="mt-3 w-full rounded-full border border-cream/25 py-3 text-sm font-medium text-cream transition-colors hover:border-gold hover:text-gold">
                 Buy Now
               </button>
+            </div>
 
+            {/* Trust + cross-sell */}
+            <div data-reveal data-reveal-delay={0.16} className="lg:border-l lg:border-cream/10 lg:pl-10">
               {product.features?.length ? (
-                <ul className="mt-9 grid gap-4 border-t border-cream/10 pt-7 sm:grid-cols-2">
+                <ul className="flex flex-col gap-5">
                   {product.features.map((f, i) => {
                     const Icon = featureIcons[i % featureIcons.length]
                     return (
@@ -299,12 +302,12 @@ export default function Product() {
                 </ul>
               ) : null}
 
-              <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-xs text-cream/45">
-                <span className="flex items-center gap-1.5">
+              <div className="mt-8 flex flex-col gap-3 border-t border-cream/10 pt-7 text-xs text-cream/45">
+                <span className="flex items-center gap-2">
                   <TruckIcon size={14} />
                   Free shipping over ₹799
                 </span>
-                <span className="flex items-center gap-1.5">
+                <span className="flex items-center gap-2">
                   <ShieldCheck size={14} />
                   5-day easy returns
                 </span>
