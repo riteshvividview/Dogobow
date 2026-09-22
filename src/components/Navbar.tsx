@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { navLinks } from '../data/content'
 import MegaMenu from './MegaMenu'
@@ -26,6 +27,12 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [hidden, setHidden] = useState(false)
   const [menu, setMenu] = useState<'shop' | 'collections' | null>(null)
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    setMenu(null)
+    setOpen(false)
+  }, [pathname])
 
   useEffect(() => {
     let last = window.scrollY
