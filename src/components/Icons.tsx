@@ -295,3 +295,10 @@ export const SlidersIcon = (p: IconProps) => (
     <circle cx="8" cy="18" r="2.2" />
   </Svg>
 )
+export const PercentIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M19 5 5 19" />
+    <circle cx="7" cy="7" r="2.5" />
+    <circle cx="17" cy="17" r="2.5" />
+  </Svg>
+)
