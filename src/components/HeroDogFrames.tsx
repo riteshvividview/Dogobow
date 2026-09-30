@@ -19,19 +19,23 @@ const FRAME_URLS = Object.keys(frameModules)
 
 const TOTAL = FRAME_URLS.length
 // Frame ~65 is where the head is turned toward camera with the mouth open —
-// the "happy/hungry" pose the cursor should rest on at the center of the screen.
+// the "happy/hungry" pose the cursor should rest on.
 const CENTER_INDEX = Math.min(64, TOTAL - 1)
 const NATIVE_W = 1920
 const NATIVE_H = 836
 const EASE = 0.12
+// The hero photo is object-position 58% 40%, and the dog itself sits left of
+// the frame's true midline, so the face renders at ~44% of viewport width —
+// not 50%. That's the fraction the cursor should hit the happy pose at.
+const CENTER_FRACTION = 0.44
 
 export const hasFrames = TOTAL > 0
 
-/** Maps a horizontal cursor fraction (0 = left edge, 1 = right edge) to a frame index, with the center pinned to CENTER_INDEX. */
+/** Maps a horizontal cursor fraction (0 = left edge, 1 = right edge) to a frame index, with CENTER_FRACTION pinned to CENTER_INDEX. */
 function indexForFraction(fraction: number) {
   const f = Math.min(1, Math.max(0, fraction))
-  if (f <= 0.5) return (f / 0.5) * CENTER_INDEX
-  return CENTER_INDEX + ((f - 0.5) / 0.5) * (TOTAL - 1 - CENTER_INDEX)
+  if (f <= CENTER_FRACTION) return (f / CENTER_FRACTION) * CENTER_INDEX
+  return CENTER_INDEX + ((f - CENTER_FRACTION) / (1 - CENTER_FRACTION)) * (TOTAL - 1 - CENTER_INDEX)
 }
 
 interface HeroDogFramesProps {
