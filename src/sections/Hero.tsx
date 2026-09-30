@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { gsap, SplitText, useGSAP } from '../lib/gsap'
 import { onReady } from '../lib/ready'
 import Media, { hasMedia } from '../components/Media'
+import HeroDogFrames, { hasFrames } from '../components/HeroDogFrames'
 import Button from '../components/Button'
 import Particles from '../components/Particles'
 import { Link } from 'react-router-dom'
@@ -190,12 +191,16 @@ export default function Hero() {
         }}
       />
 
-      {!hasMedia(HERO_BG) ? <Scenery /> : null}
+      {!hasFrames && !hasMedia(HERO_BG) ? <Scenery /> : null}
 
       {/* PSD layers: drop hero-background-image / hero-mid / hero-dog / hero-fg into src/assets/images */}
       <div data-parallax="0.32" data-parallax-top className="absolute inset-[-6%]">
         <div data-depth="0.25" className="h-full w-full">
-          <Media eager slot={HERO_BG} className="h-full w-full object-cover object-[58%_40%]" />
+          {hasFrames ? (
+            <HeroDogFrames className="h-full w-full object-cover object-[58%_40%]" />
+          ) : (
+            <Media eager slot={HERO_BG} className="h-full w-full object-cover object-[58%_40%]" />
+          )}
         </div>
       </div>
       <div data-parallax="0.2" data-parallax-top className="absolute inset-[-6%]">
