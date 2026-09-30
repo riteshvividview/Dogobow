@@ -1,14 +1,15 @@
 import { useEffect, useRef } from 'react'
 
 /**
- * 121 sequential frames of the hero dog turning its head, re-encoded to WebP
- * at build time by the same vite-imagetools pipeline Media.tsx uses. Sorted
- * alphabetically, which matches frame order since the filenames are
- * zero-padded (ezgif-frame-001.png … -121.png).
+ * 121 sequential frames of the hero dog turning its head. Pre-upscaled
+ * (lanczos3, 992px -> 1920px wide) and sharpened via a one-off sharp script
+ * so they hold up at full hero width instead of the source export's native
+ * resolution — see the frames-hd folder. Sorted alphabetically, which
+ * matches frame order since the filenames are zero-padded (…-001 … -121).
  */
-const frameModules = import.meta.glob('../assets/hero-dog-frames/frames/*.png', {
+const frameModules = import.meta.glob('../assets/hero-dog-frames/frames-hd/*.webp', {
   eager: true,
-  query: { format: 'webp', quality: 80 },
+  query: '?url',
   import: 'default',
 }) as Record<string, string>
 
@@ -20,8 +21,8 @@ const TOTAL = FRAME_URLS.length
 // Frame ~65 is where the head is turned toward camera with the mouth open —
 // the "happy/hungry" pose the cursor should rest on at the center of the screen.
 const CENTER_INDEX = Math.min(64, TOTAL - 1)
-const NATIVE_W = 992
-const NATIVE_H = 432
+const NATIVE_W = 1920
+const NATIVE_H = 836
 const EASE = 0.12
 
 export const hasFrames = TOTAL > 0
@@ -48,6 +49,8 @@ export default function HeroDogFrames({ className = '' }: HeroDogFramesProps) {
 
     canvas.width = NATIVE_W
     canvas.height = NATIVE_H
+    ctx.imageSmoothingEnabled = true
+    ctx.imageSmoothingQuality = 'high'
 
     const images: (HTMLImageElement | null)[] = new Array(TOTAL).fill(null)
     const loaded = new Array(TOTAL).fill(false)
