@@ -4,6 +4,7 @@ import { useLenis } from './hooks/useLenis'
 import { getLenis } from './lib/lenis'
 import Navbar from './components/Navbar'
 import CartDrawer from './components/CartDrawer'
+import CustomCursor from './components/CustomCursor'
 import Home from './pages/Home'
 import Collection from './pages/Collection'
 import Product from './pages/Product'
@@ -31,6 +32,7 @@ function App() {
       <Preloader />
       <Navbar />
       <CartDrawer />
+      <CustomCursor />
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />

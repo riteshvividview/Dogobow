@@ -167,6 +167,7 @@ export default function Hero() {
     <section
       ref={root}
       data-parallax-root
+      data-bone-cursor
       className="relative flex min-h-[100svh] w-full flex-col overflow-hidden bg-ink"
     >
       {/* Sky */}
@@ -197,7 +198,7 @@ export default function Hero() {
       <div data-parallax="0.32" data-parallax-top className="absolute inset-[-6%]">
         <div data-depth="0.25" className="h-full w-full">
           {hasFrames ? (
-            <HeroDogFrames className="h-full w-full object-cover object-[58%_40%]" />
+            <HeroDogFrames className="h-full w-full object-cover object-[0%_40%]" />
           ) : (
             <Media eager slot={HERO_BG} className="h-full w-full object-cover object-[58%_40%]" />
           )}

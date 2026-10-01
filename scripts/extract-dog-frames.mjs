@@ -23,6 +23,7 @@ const OUT_DIR = 'src/assets/hero-dog-frames'
 const RAW_DIR = `${OUT_DIR}/.raw`
 const FRAMES_DIR = `${OUT_DIR}/frames`
 const FRAME_COUNT = 128
+const DENSE_SEAM_RADIUS = 18 // every source frame within this many frames of the loop seam (0 / last), on both sides
 const CENTER_SOURCE_FRAME = 0 // direct-gaze, mouth-closed, calm — confirmed by visual review
 const TARGET_WIDTH = 1920
 const WEBP_QUALITY = 87
@@ -49,6 +50,22 @@ function evenlySpacedIndices(total, count) {
   const idx = []
   for (let i = 0; i < count; i++) idx.push(Math.round((i * (total - 1)) / (count - 1)))
   return [...new Set(idx)]
+}
+
+/**
+ * The center pose sits at the loop seam (source frame 0, which is also right
+ * where the clip ends before looping). Evenly-spaced sampling leaves that
+ * region as sparse as everywhere else, so easing into center still steps
+ * between visually-distinct keyframes instead of a smooth blend. Densifies
+ * just the seam (every source frame within DENSE_RADIUS of 0, both sides)
+ * while keeping the rest at the original coarse spacing.
+ */
+function denseNearSeamIndices(total, coarseCount, denseRadius) {
+  const coarse = evenlySpacedIndices(total, coarseCount)
+  const dense = []
+  for (let f = 0; f <= denseRadius; f++) dense.push(f)
+  for (let f = total - 1 - denseRadius; f <= total - 1; f++) dense.push(f)
+  return [...new Set([...coarse, ...dense])].sort((a, b) => a - b)
 }
 
 /** ffmpeg's select-expression parser chokes on very long OR chains, so pull every frame once and pick from disk instead — still one ffmpeg pass, still reproducible. */
@@ -83,8 +100,8 @@ async function main() {
   // ffmpeg's %04d output is 1-indexed and matches frame n = (file index - 1).
   const pathForFrame = (n) => `${RAW_DIR}/${allFiles[n]}`
 
-  const indices = evenlySpacedIndices(info.nbFrames, FRAME_COUNT)
-  console.log(`Selecting ${indices.length} evenly-spaced frames + 1 center frame...`)
+  const indices = denseNearSeamIndices(info.nbFrames, FRAME_COUNT, DENSE_SEAM_RADIUS)
+  console.log(`Selecting ${indices.length} frames (dense near the center/loop seam) + 1 center frame...`)
   let total = 0
   for (let i = 0; i < indices.length; i++) {
     const name = `frame-${String(i).padStart(3, '0')}.webp`

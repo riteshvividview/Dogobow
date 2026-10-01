@@ -314,3 +314,22 @@ export const LockIcon = (p: IconProps) => (
     <path d="M8 11V7a4 4 0 0 1 8 0v4" />
   </Svg>
 )
+export const BoneIcon = ({ size = 20, ...rest }: IconProps) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    aria-hidden="true"
+    {...rest}
+  >
+    <g transform="rotate(-35 12 12)">
+      <rect x="7.2" y="9.6" width="9.6" height="4.8" rx="2.4" />
+      <circle cx="7.2" cy="9.6" r="2.8" />
+      <circle cx="7.2" cy="14.4" r="2.8" />
+      <circle cx="16.8" cy="9.6" r="2.8" />
+      <circle cx="16.8" cy="14.4" r="2.8" />
+    </g>
+  </svg>
+)

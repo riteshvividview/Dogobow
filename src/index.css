@@ -60,6 +60,12 @@ body {
   color: var(--color-ink);
 }
 
+/* Native pointer hidden in favour of the animated bone/paw cursor (desktop only — see CustomCursor.tsx) */
+.bone-cursor-active,
+.bone-cursor-active * {
+  cursor: none !important;
+}
+
 /* Film grain laid over the whole page for a tactile, cinematic finish */
 .grain::after {
   content: "";
