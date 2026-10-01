@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { gsap } from '../lib/gsap'
 import { markReady } from '../lib/ready'
 import { allImageUrls, mediaUrl } from './Media'
+import { allHeroDogFrameUrls } from '../lib/heroDogFrames'
 import Logo from './Logo'
 import Particles from './Particles'
 import { PawIcon } from './Icons'
@@ -9,7 +10,10 @@ import { categories } from '../data/content'
 
 const SESSION_KEY = 'dogobow-intro-seen'
 const MIN_MS = 2400
-const MAX_MS = 8000
+// Raised from the original 8s: the hero dog's ~150 frames (~20MB) are now
+// part of this critical set (see below), so slower connections need more
+// runway before the loader gives up waiting and force-exits.
+const MAX_MS = 15000
 
 const CRITICAL = ['hero-background-image-wide', 'hero-background-image', ...categories.map((c) => c.heroSlot)]
 
@@ -55,7 +59,12 @@ export default function Preloader() {
 
     const state = { shown: 0, target: 0, done: false }
     const startedAt = performance.now()
-    const critical = CRITICAL.map((n) => mediaUrl(n)).filter((u): u is string => Boolean(u))
+    const staticCritical = CRITICAL.map((n) => mediaUrl(n)).filter((u): u is string => Boolean(u))
+    // The dog's frames go first so they get first crack at the browser's
+    // limited concurrent-connection slots — this is the asset the "focus
+    // more on the frames" ask is about, not the category thumbnails.
+    const dogFrames = allHeroDogFrameUrls()
+    const critical = [...dogFrames, ...staticCritical]
     const total = critical.length + 2 // images + fonts + first paint
     let finished = 0
     const bump = () => {
